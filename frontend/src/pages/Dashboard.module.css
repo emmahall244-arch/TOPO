@@ -1,0 +1,127 @@
+.dashboard {
+  padding-top: 32px !important;
+  padding-bottom: 32px !important;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 32px;
+}
+
+.header button {
+  white-space: nowrap;
+}
+
+.form {
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+  max-width: 500px;
+}
+
+.formButtons {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.formButtons button {
+  flex: 1;
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  background: white;
+  padding: 12px 16px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  width: fit-content;
+}
+
+.filters label {
+  margin: 0;
+  font-weight: 500;
+}
+
+.filters select {
+  width: auto;
+  padding: 6px 12px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.card {
+  display: block;
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 20px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.card:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.card h3 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  color: var(--color-text);
+}
+
+.card p {
+  margin: 0 0 16px 0;
+  color: var(--color-text-light);
+  font-size: 14px;
+}
+
+.meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.stage {
+  display: inline-block;
+  background: var(--color-bg);
+  color: var(--color-primary);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.empty {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 8px;
+  border: 1px dashed var(--color-border);
+}
+
+.empty p {
+  color: var(--color-text-light);
+  margin: 0;
+}
