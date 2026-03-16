@@ -1,7 +1,14 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import styles from './Navigation.module.css'
 
 export default function Navigation() {
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    localStorage.removeItem('authToken')
+    navigate('/login')
+  }
+
   return (
     <nav className={styles.nav}>
       <div className={styles.container}>
@@ -11,8 +18,9 @@ export default function Navigation() {
         <div className={styles.links}>
           <Link to="/">Projects</Link>
           <div className={styles.userMenu}>
-            <button className="secondary">Profile</button>
-            <button className="secondary">Logout</button>
+            <button className="secondary" onClick={handleLogout}>
+              Logout
+            </button>
           </div>
         </div>
       </div>
