@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import Navigation from '@/components/Navigation'
+import MeetingsPanel from '@/components/MeetingsPanel'
 import { useProject, useUpdateProject, useDeleteProject } from '@/hooks/useProjects'
 import { useTasks, useCreateTask } from '@/hooks/useTasks'
 import { useContacts, useCreateContact } from '@/hooks/useContacts'
@@ -17,7 +18,7 @@ export default function ProjectDetail() {
   const createTask = useCreateTask()
   const createContact = useCreateContact()
 
-  const [activeTab, setActiveTab] = useState<'info' | 'tasks' | 'contacts'>('info')
+  const [activeTab, setActiveTab] = useState<'info' | 'tasks' | 'contacts' | 'meetings'>('info')
   const [editMode, setEditMode] = useState(false)
   const [formData, setFormData] = useState(project || {})
   const [newTask, setNewTask] = useState({ title: '', priority: 'medium', status: 'pending' })
@@ -107,6 +108,12 @@ export default function ProjectDetail() {
             onClick={() => setActiveTab('contacts')}
           >
             Contacts ({contacts?.length || 0})
+          </button>
+          <button
+            className={activeTab === 'meetings' ? styles.active : ''}
+            onClick={() => setActiveTab('meetings')}
+          >
+            Meetings
           </button>
         </div>
 
@@ -290,6 +297,12 @@ export default function ProjectDetail() {
             ) : (
               <p className="text-muted">No contacts yet</p>
             )}
+          </div>
+        )}
+
+        {activeTab === 'meetings' && (
+          <div className={styles.content}>
+            <MeetingsPanel projectId={id || ''} />
           </div>
         )}
       </div>
