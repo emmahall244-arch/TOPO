@@ -14,7 +14,8 @@ model User {
   id    String     @id @default(cuid())
   email String     @unique
   name  String
-  azureId String   @unique
+  password String?  // Optional for Azure/SSO users
+  azureId String?   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

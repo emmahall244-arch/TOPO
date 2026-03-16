@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { prisma } from '@/db/client';
+import authRoutes from '@/routes/auth';
 import projectRoutes from '@/routes/projects';
 import taskRoutes from '@/routes/tasks';
 import scheduleRoutes from '@/routes/schedule';
@@ -25,6 +26,7 @@ app.get('/health', (_req, res) => {
 });
 
 // API Routes
+app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/schedule', scheduleRoutes);

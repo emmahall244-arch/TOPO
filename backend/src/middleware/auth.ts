@@ -6,12 +6,14 @@ export interface AuthRequest extends Request {
     id: string
     email: string
     name: string
-    azureId: string
+    azureId?: string
   }
 }
 
-// Middleware to verify JWT token
-export const verifyToken = async (req: AuthRequest, res: Response, next: NextFunction) => {
+const JWT_SECRET = process.env.SESSION_SECRET || 'topo-secret-key'
+
+// Middleware to verify JWT token and ensure user is authenticated
+export const requireAuth = (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
     const token = req.headers.authorization?.split(' ')[1]
 
@@ -19,19 +21,18 @@ export const verifyToken = async (req: AuthRequest, res: Response, next: NextFun
       return res.status(401).json({ error: 'No token provided' })
     }
 
-    // TODO: Verify token with Azure AD
-    // For now, we'll do a simple verification
-    const decoded = jwt.decode(token) as any
+    // Verify and decode JWT token
+    const decoded = jwt.verify(token, JWT_SECRET) as any
 
     if (!decoded) {
       return res.status(401).json({ error: 'Invalid token' })
     }
 
     req.user = {
-      id: decoded.sub || decoded.oid,
-      email: decoded.email || decoded.unique_name,
+      id: decoded.sub,
+      email: decoded.email,
       name: decoded.name,
-      azureId: decoded.oid || decoded.sub,
+      azureId: decoded.oid,
     }
 
     return next()
@@ -39,13 +40,4 @@ export const verifyToken = async (req: AuthRequest, res: Response, next: NextFun
     console.error('Token verification error:', error)
     return res.status(401).json({ error: 'Invalid token' })
   }
-}
-
-// Middleware to ensure user is authenticated
-export const requireAuth = (req: AuthRequest, res: Response, next: NextFunction): void => {
-  if (!req.user) {
-    res.status(401).json({ error: 'Authentication required' })
-    return
-  }
-  next()
 }
