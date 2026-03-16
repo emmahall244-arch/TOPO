@@ -20,7 +20,7 @@ export default function ProjectDetail() {
 
   const [activeTab, setActiveTab] = useState<'info' | 'tasks' | 'contacts' | 'meetings'>('info')
   const [editMode, setEditMode] = useState(false)
-  const [formData, setFormData] = useState(project || {})
+  const [formData, setFormData] = useState(project ?? { name: '', address: '', acreage: 0, size: '', ownership: '', stage: 'planning' } as any)
   const [newTask, setNewTask] = useState({ title: '', priority: 'medium', status: 'pending' })
   const [newContact, setNewContact] = useState({ name: '', role: '', company: '', email: '' })
 

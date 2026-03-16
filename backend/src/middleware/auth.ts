@@ -34,17 +34,18 @@ export const verifyToken = async (req: AuthRequest, res: Response, next: NextFun
       azureId: decoded.oid || decoded.sub,
     }
 
-    next()
+    return next()
   } catch (error) {
     console.error('Token verification error:', error)
-    res.status(401).json({ error: 'Invalid token' })
+    return res.status(401).json({ error: 'Invalid token' })
   }
 }
 
 // Middleware to ensure user is authenticated
-export const requireAuth = (req: AuthRequest, res: Response, next: NextFunction) => {
+export const requireAuth = (req: AuthRequest, res: Response, next: NextFunction): void => {
   if (!req.user) {
-    return res.status(401).json({ error: 'Authentication required' })
+    res.status(401).json({ error: 'Authentication required' })
+    return
   }
   next()
 }

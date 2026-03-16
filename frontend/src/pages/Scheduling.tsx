@@ -23,9 +23,9 @@ export default function Scheduling() {
       await createPhase.mutateAsync({
         projectId: id || '',
         data: {
-          ...newPhase,
-          startDate: newPhase.startDate ? new Date(newPhase.startDate) : undefined,
-          endDate: newPhase.endDate ? new Date(newPhase.endDate) : undefined,
+          name: newPhase.name,
+          startDate: newPhase.startDate || undefined,
+          endDate: newPhase.endDate || undefined,
         },
       })
       setNewPhase({ name: '', startDate: '', endDate: '' })
@@ -42,7 +42,7 @@ export default function Scheduling() {
         phaseId: newMilestone.phaseId,
         data: {
           name: newMilestone.name,
-          dueDate: newMilestone.dueDate ? new Date(newMilestone.dueDate) : undefined,
+          dueDate: newMilestone.dueDate || undefined,
         },
       })
       setNewMilestone({ name: '', dueDate: '', phaseId: '' })
@@ -51,7 +51,7 @@ export default function Scheduling() {
     }
   }
 
-  const handleMilestoneStatusChange = async (milestoneId: string, newStatus: string) => {
+  const handleMilestoneStatusChange = async (milestoneId: string, _newStatus: string) => {
     setChangeReason({ milestoneId, reason: '' })
   }
 
