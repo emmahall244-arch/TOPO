@@ -10,16 +10,13 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "@tanstack/react-query": "^5.28.0",
-    "zustand": "^4.4.1",
-    "@microsoft/msal-react": "^2.27.0",
-    "@microsoft/msal-browser": "^2.27.0",
-    "@ui/shadcn": "^0.0.4",
-    "recharts": "^2.10.3",
-    "react-router-dom": "^6.22.0",
-    "axios": "^1.6.5"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@tanstack/react-query": "^5.0.0",
+    "zustand": "^4.3.7",
+    "recharts": "^2.5.0",
+    "react-router-dom": "^6.10.0",
+    "axios": "^1.4.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",
