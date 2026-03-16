@@ -1,0 +1,176 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    String     @id @default(cuid())
+  email String     @unique
+  name  String
+  azureId String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projects       Project[]
+  tasksCreated   Task[]     @relation("createdBy")
+  tasksAssigned  Task[]     @relation("assignedTo")
+  changelogs     ChangeLog[]
+  meetingNotes   MeetingNotes[]
+
+  @@map("users")
+}
+
+model Project {
+  id        String     @id @default(cuid())
+  name      String
+  address   String?
+  acreage   Float?
+  size      String?
+  ownership String?
+  stage     String     @default("feasibility") // feasibility, entitlement, construction, stabilized
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  createdBy String
+  user      User       @relation(fields: [createdBy], references: [id])
+
+  documents      ProjectDocument[]
+  phases         Phase[]
+  tasks          Task[]
+  changelogs     ChangeLog[]
+  meetingNotes   MeetingNotes[]
+  contacts       Contact[]
+
+  @@map("projects")
+}
+
+model ProjectDocument {
+  id        String     @id @default(cuid())
+  projectId String
+  project   Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  docType   String     // address, deed, parcel, ownership, other
+  fileName  String
+  fileUrl   String
+  uploadedAt DateTime  @default(now())
+
+  @@map("project_documents")
+}
+
+model Phase {
+  id        String     @id @default(cuid())
+  projectId String
+  project   Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name      String
+  startDate DateTime?
+  endDate   DateTime?
+  description String?
+  order     Int        @default(0)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  milestones Milestone[]
+  changelogs ChangeLog[] @relation("PhaseChanges")
+
+  @@map("phases")
+}
+
+model Milestone {
+  id        String     @id @default(cuid())
+  phaseId   String
+  phase     Phase      @relation(fields: [phaseId], references: [id], onDelete: Cascade)
+  name      String
+  dueDate   DateTime?
+  status    String     @default("pending") // pending, in_progress, completed
+  order     Int        @default(0)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  changelogs ChangeLog[] @relation("MilestoneChanges")
+
+  @@map("milestones")
+}
+
+model Task {
+  id        String     @id @default(cuid())
+  projectId String
+  project   Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title     String
+  description String?
+  status    String     @default("pending") // pending, in_progress, completed, late
+  priority  String     @default("medium") // low, medium, high
+  dueDate   DateTime?
+  assignedToId String?
+  assignedTo User?     @relation("assignedTo", fields: [assignedToId], references: [id])
+  createdById String
+  createdBy User       @relation("createdBy", fields: [createdById], references: [id])
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  changelogs ChangeLog[]
+
+  @@map("tasks")
+}
+
+model ChangeLog {
+  id        String     @id @default(cuid())
+  recordType String    // "task", "milestone", "phase"
+  recordId  String     // ID of the task/milestone/phase being changed
+  projectId String
+  project   Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  taskId    String?
+  task      Task?      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  phaseId   String?
+  phase     Phase?     @relation("PhaseChanges", fields: [phaseId], references: [id], onDelete: Cascade)
+  milestoneId String?
+  milestone Milestone? @relation("MilestoneChanges", fields: [milestoneId], references: [id], onDelete: Cascade)
+
+  fieldChanged String   // e.g., "dueDate", "status", "priority"
+  oldValue String?
+  newValue String?
+  reason   String      // Why the change was made (required for dates/status)
+
+  changedById String
+  changedBy  User       @relation(fields: [changedById], references: [id])
+  changedAt  DateTime   @default(now())
+
+  @@map("change_logs")
+}
+
+model MeetingNotes {
+  id        String     @id @default(cuid())
+  projectId String
+  project   Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  date      DateTime
+  attendees String?    // comma-separated or JSON
+  notes     String     // raw notes from meeting
+  highlights String?   // extracted highlights (from cleanup)
+
+  createdById String
+  createdBy  User       @relation(fields: [createdById], references: [id])
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  @@map("meeting_notes")
+}
+
+model Contact {
+  id        String     @id @default(cuid())
+  projectId String
+  project   Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name      String
+  role      String?    // consultant, lawyer, engineer, etc.
+  company   String?
+  email     String?
+  phone     String?
+  notes     String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@map("contacts")
+}
